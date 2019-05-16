@@ -124,7 +124,13 @@ let g:NERDToggleCheckAllLines = 1
 " ----------------------------------------------------------------------
 
 " use relative numbering (easier for some vim commands)
-set number relativenumber
+:set number relativenumber
+
+:augroup numbertoggle
+:  autocmd!
+:  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+:  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+:augroup END
 
 " ----------------------------------------------------------------------
 " ------------------------- custom key bindings ------------------------
