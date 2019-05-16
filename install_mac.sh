@@ -34,7 +34,7 @@ brew install htop bat fzf
 if [ "$INSTALL_NEOVIM" = true ]; then
     echo "Installing NeoVim..."
     brew install neovim python3
-    pip3 install pynvim jedi
+    pip3 install pynvim jedi flake8
 
     # add the binary directory to our PATH variable
     echo "export \"PATH=${DEFAULT_BIN_PATH}:$PATH\"" >> ~/.zshrc
