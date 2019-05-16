@@ -1,0 +1,44 @@
+[user]
+    name = bradley-z
+    email = bradley.m.zhou@gmail.com
+
+[push]
+    default = simple
+
+[alias]
+    # quick ways to switch between/create branches
+    co = checkout
+    cob = checkout -b
+
+    # stage and commit
+    ac = !git add . && git commit -am
+    
+    # undo most recent commit
+    undo = reset --soft HEAD^
+    
+    # fancy logs
+    lol = log --graph --decorate --pretty=oneline --abbrev-commit
+    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+
+    # alias for icdiff
+    id = difftool
+
+    # more aliases for icdiff
+    showtool = "!f() { git difftool $1^ $1; }; f"
+    added = difftool --cached
+
+[diff]
+    # set difftool
+    tool = icdiff
+
+[difftool]
+    # no prompt on difftool
+    prompt = false
+
+[difftool "icdiff"]
+    # set options
+    cmd = icdiff --highlight --line-numbers $LOCAL $REMOTE
+
+[pager]
+    # auto pager
+    difftool = true
