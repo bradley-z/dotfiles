@@ -26,8 +26,6 @@ Plug 'scrooloose/nerdcommenter'
 " assuming you're using vim-plug: https://github.com/junegunn/vim-plug
 Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2-jedi'
-Plug 'ncm2/ncm2-pyclang'
 
 " enable ncm2 for all buffers
 autocmd BufEnter * call ncm2#enable_for_buffer()
@@ -39,6 +37,10 @@ set completeopt=noinsert,menuone,noselect
 " our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
 Plug 'ncm2/ncm2-bufword'
 Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-jedi'
+Plug 'ncm2/ncm2-pyclang'
+" ALE for linting
+Plug 'w0rp/ale'
 call plug#end()
 
 let g:airline_theme = 'gruvbox'
@@ -46,6 +48,10 @@ let g:gitgutter_terminal_reports_focus=0
 let g:gitgutter_realtime=1
 let g:gitgutter_eager=1
 set updatetime=50
+
+let g:ale_linters = {'cpp': ['clang', 'clang-format'], 'c': ['clang', 'clang-format'], 'python': ['flake8']}
+
+let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
 
 " ----------------------------------------------------------------------
 " ---------------------------- vim settings ----------------------------
@@ -61,13 +67,25 @@ set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set expandtab
+set smarttab
 set smartindent
-set scrolloff=10
+set scrolloff=5
+set sidescrolloff=5
 set ruler
+set backspace=indent,eol,start
 syntax on
 set showmatch
-set showcmd
-filetype plugin on
+set encoding=utf-8
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+set nostartofline
+set shiftwidth=4
+set softtabstop=4
+set showtabline=2
+set wrapscan
+filetype plugin indent on
 let mapleader = "\<Space>"
 
 " ----------------------------------------------------------------------
@@ -77,6 +95,9 @@ let mapleader = "\<Space>"
 " open nerdtree tab by default when opening a directory with vim
 " Note: running `vim .` will open nerdtree but just running `vim` won't
 let g:nerdtree_tabs_open_on_console_startup=2
+
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
 
 " ----------------------------------------------------------------------
 " ----------------------- nerd commenter settings ----------------------
@@ -113,11 +134,12 @@ map ; :NERDTreeToggle<CR>
 " use " for Ctrl-p
 map " :CtrlP<CR>
 
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
+nnoremap <C-j> gT<CR>
+nnoremap <C-k> gt<CR>
+nnoremap <C-l> :tabc<CR>
 
 " ----------------------------------------------------------------------
-" -----------------------_-- settings for ncm2 _------------------------
+" -------------------------- settings for ncm2 -------------------------
 " ----------------------------------------------------------------------
 
 " suppress the annoying 'match x of y', 'The only match' and 'Pattern not
