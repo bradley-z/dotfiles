@@ -87,6 +87,7 @@ set showtabline=2
 set wrapscan
 filetype plugin indent on
 let mapleader = "\<Space>"
+hi LineNr term=bold cterm=bold ctermfg=8 guifg=NONE guibg=NONE
 
 " ----------------------------------------------------------------------
 " ------------------------- nerd tree settings -------------------------
