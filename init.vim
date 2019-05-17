@@ -137,9 +137,9 @@ map ; :NERDTreeToggle<CR>
 " use " for Ctrl-p
 map " :CtrlP<CR>
 
-nnoremap <C-j> gT<CR>
-nnoremap <C-k> gt<CR>
-nnoremap <C-l> :tabc<CR>
+nnoremap <C-h> gT<CR>
+nnoremap <C-l> gt<CR>
+nnoremap <C-[> :tabc<CR>
 
 " ----------------------------------------------------------------------
 " -------------------------- settings for ncm2 -------------------------
