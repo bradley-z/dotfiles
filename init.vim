@@ -141,6 +141,10 @@ nnoremap <C-h> gT<CR>
 nnoremap <C-l> gt<CR>
 nnoremap <C-[> :tabc<CR>
 
+" move vertically by visual line
+nnoremap j gj
+nnoremap k gk
+
 " ----------------------------------------------------------------------
 " -------------------------- settings for ncm2 -------------------------
 " ----------------------------------------------------------------------
