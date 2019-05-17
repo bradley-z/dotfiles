@@ -51,8 +51,9 @@ let g:gitgutter_eager=1
 set updatetime=50
 
 let g:ale_linters = {'cpp': ['clang', 'clang-format'], 'c': ['clang', 'clang-format'], 'python': ['flake8']}
-
 let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
+
+let g:gruvbox_termcolors=16
 
 " ----------------------------------------------------------------------
 " ---------------------------- vim settings ----------------------------
