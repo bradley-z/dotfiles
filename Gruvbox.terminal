@@ -247,7 +247,7 @@
 	<key>rowCount</key>
 	<integer>80</integer>
 	<key>shellExitAction</key>
-	<integer>2</integer>
+	<integer>1</integer>
 	<key>type</key>
 	<string>Window Settings</string>
 	<key>useOptionAsMetaKey</key>
