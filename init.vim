@@ -42,6 +42,7 @@ Plug 'ncm2/ncm2-pyclang'
 " ALE for linting
 Plug 'w0rp/ale'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
+Plug 'romainl/vim-cool'
 call plug#end()
 
 let g:airline_theme = 'gruvbox'
