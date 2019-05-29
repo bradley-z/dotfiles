@@ -84,8 +84,6 @@ set hlsearch
 set ignorecase
 set smartcase
 set nostartofline
-set shiftwidth=4
-set softtabstop=4
 set showtabline=2
 set wrapscan
 filetype plugin indent on
