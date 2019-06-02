@@ -86,6 +86,8 @@ set smartcase
 set nostartofline
 set showtabline=2
 set wrapscan
+set lazyredraw
+set undofile
 filetype plugin indent on
 let mapleader = "\<Space>"
 hi LineNr term=bold cterm=bold ctermfg=8 guifg=NONE guibg=NONE
