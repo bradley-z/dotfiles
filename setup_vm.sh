@@ -67,12 +67,8 @@ else
   fi
 
   # Write token to .env
-  if [[ -f "$ENV_FILE" ]]; then
-    sed -i '/^export GITHUB_TOKEN=/d' "$ENV_FILE"
-    sed -i '/^export GIT_ASKPASS=/d' "$ENV_FILE"
-  fi
+  sed -i '/^export GITHUB_TOKEN=/d' "$ENV_FILE" 2>/dev/null || true
   echo "export GITHUB_TOKEN='${GITHUB_PAT}'" >> "$ENV_FILE"
-  echo "export GIT_ASKPASS=\"\$HOME/.git-askpass.sh\"" >> "$ENV_FILE"
   echo "Saved GITHUB_TOKEN to $ENV_FILE"
 
   # Source .env from the appropriate shell rc file
@@ -106,8 +102,7 @@ echo "=== Applying dotfiles ==="
 
 cp "$HOME/repos/dotfiles/git-askpass.sh" "$HOME/.git-askpass.sh"
 chmod 700 "$HOME/.git-askpass.sh"
-export GIT_ASKPASS="$HOME/.git-askpass.sh"
-sed -i '/^export GIT_ASKPASS=/d' "$ENV_FILE"
+sed -i '/^export GIT_ASKPASS=/d' "$ENV_FILE" 2>/dev/null || true
 echo "export GIT_ASKPASS=\"\$HOME/.git-askpass.sh\"" >> "$ENV_FILE"
 echo "Copied git-askpass.sh -> ~/.git-askpass.sh"
 
