@@ -80,20 +80,6 @@ else
   export GITHUB_TOKEN="${GITHUB_PAT}"
 fi
 
-# Set up git-askpass (hidden file)
-cat > "$HOME/.git-askpass.sh" <<'EOF'
-#!/bin/sh
-case "$1" in
-  *Username*) echo "bradley-z" ;;
-  *Password*) echo "$GITHUB_TOKEN" ;;
-esac
-EOF
-chmod 700 "$HOME/.git-askpass.sh"
-
-export GIT_ASKPASS="$HOME/.git-askpass.sh"
-
-echo "git-askpass configured."
-
 # ─── Step 4: Clone dotfiles ──────────────────────────────────────────────────
 echo ""
 echo "=== Cloning dotfiles ==="
@@ -107,6 +93,11 @@ fi
 # ─── Step 5: Apply dotfiles ──────────────────────────────────────────────────
 echo ""
 echo "=== Applying dotfiles ==="
+
+cp "$HOME/repos/dotfiles/git-askpass.sh" "$HOME/.git-askpass.sh"
+chmod 700 "$HOME/.git-askpass.sh"
+export GIT_ASKPASS="$HOME/.git-askpass.sh"
+echo "Copied git-askpass.sh -> ~/.git-askpass.sh"
 
 cp "$HOME/repos/dotfiles/functions.sh" "$HOME/.functions.sh"
 echo "Copied functions.sh -> ~/.functions.sh"
