@@ -124,5 +124,7 @@ for RC in "$HOME/.bashrc" "$HOME/.zshrc"; do
   fi
 done
 
+rm -rf "$HOME/repos/dotfiles"
+
 echo ""
 echo "Setup complete. Re-source your shell or open a new terminal to apply changes."
