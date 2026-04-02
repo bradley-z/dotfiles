@@ -107,6 +107,8 @@ echo "=== Applying dotfiles ==="
 cp "$HOME/repos/dotfiles/git-askpass.sh" "$HOME/.git-askpass.sh"
 chmod 700 "$HOME/.git-askpass.sh"
 export GIT_ASKPASS="$HOME/.git-askpass.sh"
+sed -i '/^export GIT_ASKPASS=/d' "$ENV_FILE"
+echo "export GIT_ASKPASS=\"\$HOME/.git-askpass.sh\"" >> "$ENV_FILE"
 echo "Copied git-askpass.sh -> ~/.git-askpass.sh"
 
 cp "$HOME/repos/dotfiles/functions.sh" "$HOME/.functions.sh"
