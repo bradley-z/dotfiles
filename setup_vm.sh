@@ -34,7 +34,17 @@ else
   echo "uv already installed: $(uv --version)"
 fi
 
-# ─── Step 3: GitHub PAT setup ────────────────────────────────────────────────
+# ─── Step 3: fzf ─────────────────────────────────────────────────────────────
+if ! command -v fzf &>/dev/null; then
+  echo ""
+  echo "=== Installing fzf ==="
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install
+else
+  echo "fzf already installed: $(fzf --version)"
+fi
+
+# ─── Step 4: GitHub PAT setup ────────────────────────────────────────────────
 ENV_FILE="$HOME/.env"
 
 if [[ -n "$GITHUB_TOKEN" ]]; then
@@ -80,7 +90,7 @@ else
   export GITHUB_TOKEN="${GITHUB_PAT}"
 fi
 
-# ─── Step 4: Clone dotfiles ──────────────────────────────────────────────────
+# ─── Step 5: Clone dotfiles ──────────────────────────────────────────────────
 echo ""
 echo "=== Cloning dotfiles ==="
 mkdir -p "$HOME/repos"
@@ -90,7 +100,7 @@ else
   echo "dotfiles already cloned, skipping."
 fi
 
-# ─── Step 5: Apply dotfiles ──────────────────────────────────────────────────
+# ─── Step 6: Apply dotfiles ──────────────────────────────────────────────────
 echo ""
 echo "=== Applying dotfiles ==="
 
