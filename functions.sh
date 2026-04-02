@@ -8,11 +8,6 @@ alias ll='ls -lah'
 alias la='ls -A'
 alias l='ls -CF'
 
-# Safety nets
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
-
 # Shortcuts
 alias c='clear'
 alias h='history'

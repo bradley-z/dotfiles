@@ -35,43 +35,50 @@ else
 fi
 
 # ─── Step 3: GitHub PAT setup ────────────────────────────────────────────────
-echo ""
-echo "=== GitHub Personal Access Token Setup ==="
-echo ""
-echo "Please generate a fine-grained GitHub PAT at the following URL:"
-echo "  https://github.com/settings/tokens/new"
-echo ""
-echo "Grant read-only access to whichever repositories you need, then paste the token below."
-echo ""
-read -rsp "Paste your GitHub PAT: " GITHUB_PAT
-echo ""
-
-if [[ -z "$GITHUB_PAT" ]]; then
-  echo "Error: No token provided." >&2
-  exit 1
-fi
-
-# Write token to .env
 ENV_FILE="$HOME/.env"
-if [[ -f "$ENV_FILE" ]]; then
-  sed -i '/^export GITHUB_TOKEN=/d' "$ENV_FILE"
-  sed -i '/^export GIT_ASKPASS=/d' "$ENV_FILE"
-fi
-echo "export GITHUB_TOKEN='${GITHUB_PAT}'" >> "$ENV_FILE"
-echo "export GIT_ASKPASS=\"\$HOME/.git-askpass.sh\"" >> "$ENV_FILE"
-echo "Saved GITHUB_TOKEN to $ENV_FILE"
 
-# Source .env from the appropriate shell rc file
-for RC in "$HOME/.bashrc" "$HOME/.zshrc"; do
-  if [[ -f "$RC" ]]; then
-    if ! grep -q 'source.*\.env' "$RC" && ! grep -q '\. .*\.env' "$RC"; then
-      echo "" >> "$RC"
-      echo '# Load environment variables' >> "$RC"
-      echo 'if [ -f "$HOME/.env" ]; then source "$HOME/.env"; fi' >> "$RC"
-      echo "Updated $RC to source $ENV_FILE"
-    fi
+if [[ -n "$GITHUB_TOKEN" ]]; then
+  echo "GITHUB_TOKEN already set, skipping PAT setup."
+else
+  echo ""
+  echo "=== GitHub Personal Access Token Setup ==="
+  echo ""
+  echo "Please generate a fine-grained GitHub PAT at the following URL:"
+  echo "  https://github.com/settings/tokens/new"
+  echo ""
+  echo "Grant read-only access to whichever repositories you need, then paste the token below."
+  echo ""
+  read -rsp "Paste your GitHub PAT: " GITHUB_PAT
+  echo ""
+
+  if [[ -z "$GITHUB_PAT" ]]; then
+    echo "Error: No token provided." >&2
+    exit 1
   fi
-done
+
+  # Write token to .env
+  if [[ -f "$ENV_FILE" ]]; then
+    sed -i '/^export GITHUB_TOKEN=/d' "$ENV_FILE"
+    sed -i '/^export GIT_ASKPASS=/d' "$ENV_FILE"
+  fi
+  echo "export GITHUB_TOKEN='${GITHUB_PAT}'" >> "$ENV_FILE"
+  echo "export GIT_ASKPASS=\"\$HOME/.git-askpass.sh\"" >> "$ENV_FILE"
+  echo "Saved GITHUB_TOKEN to $ENV_FILE"
+
+  # Source .env from the appropriate shell rc file
+  for RC in "$HOME/.bashrc" "$HOME/.zshrc"; do
+    if [[ -f "$RC" ]]; then
+      if ! grep -q 'source.*\.env' "$RC" && ! grep -q '\. .*\.env' "$RC"; then
+        echo "" >> "$RC"
+        echo '# Load environment variables' >> "$RC"
+        echo 'if [ -f "$HOME/.env" ]; then source "$HOME/.env"; fi' >> "$RC"
+        echo "Updated $RC to source $ENV_FILE"
+      fi
+    fi
+  done
+
+  export GITHUB_TOKEN="${GITHUB_PAT}"
+fi
 
 # Set up git-askpass (hidden file)
 cat > "$HOME/.git-askpass.sh" <<'EOF'
@@ -84,7 +91,6 @@ EOF
 chmod 700 "$HOME/.git-askpass.sh"
 
 export GIT_ASKPASS="$HOME/.git-askpass.sh"
-export GITHUB_TOKEN="${GITHUB_PAT}"
 
 echo "git-askpass configured."
 
