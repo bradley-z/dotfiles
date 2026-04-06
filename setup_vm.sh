@@ -34,7 +34,18 @@ else
   echo "uv already installed: $(uv --version)"
 fi
 
-# ─── Step 3: fzf ─────────────────────────────────────────────────────────────
+# ─── Step 3: ag (The Silver Searcher) ────────────────────────────────────────
+if ! command -v ag &>/dev/null; then
+  echo ""
+  echo "=== Installing ag (The Silver Searcher) ==="
+  sudo apt-get update -y
+  sudo apt-get install -y silversearcher-ag
+  echo "ag installed: $(ag --version | head -1)"
+else
+  echo "ag already installed: $(ag --version | head -1)"
+fi
+
+# ─── Step 4: fzf ─────────────────────────────────────────────────────────────
 if ! command -v fzf &>/dev/null; then
   echo ""
   echo "=== Installing fzf ==="
@@ -44,7 +55,7 @@ else
   echo "fzf already installed: $(fzf --version)"
 fi
 
-# ─── Step 4: GitHub PAT setup ────────────────────────────────────────────────
+# ─── Step 5: GitHub PAT setup ────────────────────────────────────────────────
 ENV_FILE="$HOME/.env"
 
 if [[ -n "$GITHUB_TOKEN" ]]; then
@@ -86,7 +97,7 @@ else
   export GITHUB_TOKEN="${GITHUB_PAT}"
 fi
 
-# ─── Step 5: Clone dotfiles ──────────────────────────────────────────────────
+# ─── Step 6: Clone dotfiles ──────────────────────────────────────────────────
 echo ""
 echo "=== Cloning dotfiles ==="
 mkdir -p "$HOME/repos"
@@ -96,7 +107,7 @@ else
   echo "dotfiles already cloned, skipping."
 fi
 
-# ─── Step 6: Apply dotfiles ──────────────────────────────────────────────────
+# ─── Step 7: Apply dotfiles ──────────────────────────────────────────────────
 echo ""
 echo "=== Applying dotfiles ==="
 

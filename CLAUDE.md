@@ -9,3 +9,8 @@
   venvPath = "."
   venv = ".venv"
   ```
+- Prefer pure functions over side effects. Functions should depend only on their inputs and communicate results only through their return values. Avoid mutating external state, global variables, or shared mutable objects.
+
+
+# Git & Version Control
+- Never commit, push, or create pull requests unless I explicitly ask you to do so.
