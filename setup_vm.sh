@@ -12,6 +12,10 @@ if ! command -v curl &>/dev/null; then
   exit 1
 fi
 
+# The non-root user that runs docker / that CI SSHes in as. Defaults to whoever
+# is running this script. Override with DEPLOY_USER=... ./setup_vm.sh
+DEPLOY_USER="${DEPLOY_USER:-$(whoami)}"
+
 # ─── Step 1: tmux ────────────────────────────────────────────────────────────
 if ! command -v tmux &>/dev/null; then
   echo ""
@@ -137,5 +141,68 @@ done
 
 rm -rf "$HOME/repos/dotfiles"
 
+# ─── Step 8: Docker ──────────────────────────────────────────────────────────
+if ! command -v docker &>/dev/null; then
+  echo ""
+  echo "=== Installing Docker ==="
+  curl -fsSL https://get.docker.com | sh
+  echo "Docker installed: $(docker --version)"
+else
+  echo "Docker already installed: $(docker --version)"
+fi
+
+# ─── Step 9: VPS shared stack (Caddy, sqlite3, ufw, fail2ban, auto-updates) ──
+echo ""
+echo "=== Installing VPS shared stack ==="
+export DEBIAN_FRONTEND=noninteractive
+sudo apt-get update -y
+sudo apt-get install -y caddy sqlite3 ufw fail2ban unattended-upgrades
+
+# ─── Step 10: Add deploy user to the docker group ────────────────────────────
+echo ""
+echo "=== Adding '$DEPLOY_USER' to the docker group ==="
+sudo usermod -aG docker "$DEPLOY_USER"
+
+# ─── Step 11: Caddy shared config ────────────────────────────────────────────
+# Shared header snippet + auto-include of per-app vhosts from /etc/caddy/sites/.
+echo ""
+echo "=== Configuring Caddy ==="
+sudo mkdir -p /etc/caddy/sites
+sudo tee /etc/caddy/Caddyfile >/dev/null <<'EOF'
+# Managed by setup_vm.sh. Per-app vhosts live in /etc/caddy/sites/<app>.caddy
+# and are written by provision.sh — do not edit those by hand.
+
+# Shared hardening applied by every app vhost via `import app-common`.
+(app-common) {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		-Server
+	}
+}
+
+import /etc/caddy/sites/*.caddy
+EOF
+sudo systemctl reload caddy 2>/dev/null || sudo systemctl restart caddy
+
+# ─── Step 12: Firewall (allow SSH + HTTP/HTTPS, deny the rest) ───────────────
+echo ""
+echo "=== Configuring firewall ==="
+sudo ufw allow OpenSSH >/dev/null
+sudo ufw allow 80,443/tcp >/dev/null
+sudo ufw --force enable
+
+# ─── Step 13: Unattended security upgrades ───────────────────────────────────
+echo ""
+echo "=== Enabling unattended security upgrades ==="
+sudo dpkg-reconfigure -f noninteractive unattended-upgrades || true
+
 echo ""
 echo "Setup complete. Re-source your shell or open a new terminal to apply changes."
+echo ""
+echo "VPS ready. As '$DEPLOY_USER' (log out/in once so the docker group applies):"
+echo "  docker login ghcr.io -u $DEPLOY_USER     # paste a classic PAT with read:packages"
+echo "Then provision each app with ./provision.sh."
